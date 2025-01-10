@@ -1,53 +1,62 @@
-let listaAmigos = [];
+let listaAmigosGeral = [];
+let listaAmigosEmbaralhada = [];
 function adicionar() {
-    addAmigo();
-}
+    let amigo = document.getElementById("nome-amigo").value;
+    document.getElementById("nome-amigo").value = "";
 
-function addAmigo() {
-    let amigos = document.getElementById("nome-amigo");
-    if (amigos.value === "") {
-        alert("Erro, campo vazio ou nome repetido.");
+    if (amigo == "") {
+        alert("Digite o nome de um amigo");
         return;
     }
-    
-    if(listaAmigos.includes(amigos.value) ){
-       alert("Nome já adicionado, tente escreve-lo de outra forma");
-       return; 
+
+    if (listaAmigosGeral.includes(amigo)) {
+        alert("Esse amigo já foi colocado");
+        return;
+    } else {
+        listaAmigosGeral.push(amigo)
     }
-    
-    listaAmigos.push(amigos.value);
-    amigos.value = "";
-    console.log(listaAmigos);
-    mostraAmigos = document.getElementById("lista-amigos");
-    mostraAmigos.innerHTML = listaAmigos;
+
+    let amigoAdicionado = document.getElementById("lista-amigos");
+    amigoAdicionado.textContent = listaAmigosGeral;
 }
 
 function sortear() {
-    if (listaAmigos.length <= 3) {
-        alert("Sorteio disponivel apenas com 4 ou mais pessoas");
+    if (listaAmigosGeral.length < 4) {
+        alert("ERRO, sorteio disponivel apenas com 4 participantes");
         return;
     }
-    embaralha(listaAmigos);
-    let sorteados = document.getElementById("lista-sorteio");
-    for (let i = 0; i < listaAmigos.length; i++) {
-        if (i == listaAmigos.length - 1) {
-            sorteados.innerHTML += listaAmigos[i] + " ----> " + listaAmigos[0] + "<br>";
+    listaAmigosEmbaralhada = embaralha(listaAmigosGeral);
+    console.log(listaAmigosEmbaralhada);
+    let listaSorteio = document.getElementById("lista-sorteio")
+
+    for (let i = 0; i < listaAmigosEmbaralhada.length; i++) {
+        if (i == listaAmigosEmbaralhada.length - 1) {
+            listaSorteio.innerHTML = listaSorteio.innerHTML + listaAmigosEmbaralhada[i] + "--->" + listaAmigosEmbaralhada[0] + "<br>";
         } else {
-            sorteados.innerHTML += listaAmigos[i] + " ----> " + listaAmigos[i + 1] + "<br>";
+            listaSorteio.innerHTML = listaSorteio.innerHTML + listaAmigosEmbaralhada[i] + "--->" + listaAmigosEmbaralhada[i + 1] + "<br>";
         }
     }
 }
 
-function reiniciar() {
-    listaAmigos = [];
-    mostraAmigos = document.getElementById("lista-amigos").innerHTML = "";
-    document.getElementById("lista-sorteio").innerHTML = "";
-}
+function embaralha(listaAmigosGeral) {
 
-function embaralha(listaAmigos) {
-    for (let indice = listaAmigos.length; indice; indice--) {
+    for (let indice = listaAmigosGeral.length; indice; indice--) {
+
         const indiceAleatorio = Math.floor(Math.random() * indice);
-        [listaAmigos[indice - 1], listaAmigos[indiceAleatorio]] =
-            [listaAmigos[indiceAleatorio], listaAmigos[indice - 1]];
+
+        // atribuição via destructuring
+        [listaAmigosGeral[indice - 1], listaAmigosGeral[indiceAleatorio]] =
+            [listaAmigosGeral[indiceAleatorio], listaAmigosGeral[indice - 1]];
     }
+    return listaAmigosGeral;
+}
+function reiniciar() {
+    listaAmigosGeral = [];
+    listaAmigosEmbaralhada = [];
+    let vazio1 = document.getElementById("lista-sorteio");
+    document.getElementById("nome-amigo").value = "";
+    let vazio = document.getElementById("lista-amigos");
+    vazio.innerHTML = "";
+    vazio1.innerHTML = "";
+
 }
